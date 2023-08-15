@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "87949302705",
+    "project_id": "event-notifier-b1ec9",
+    "storage_bucket": "event-notifier-b1ec9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:87949302705:android:9c3dec96a68a76209bfb90",
+        "android_client_info": {
+          "package_name": "com.noticsme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "87949302705-t586qhn7m996sl6rq6h2k5c4ipape8vf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.noticsme",
+            "certificate_hash": "944259fa36400399e3ba6785008f12e7298266ad"
+          }
+        },
+        {
+          "client_id": "87949302705-3drl0e2ae76e90i7a80gv7v26f8dis6f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzi2-w3pVxJ8HmTnncmbmIZclWA6cWjdI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "87949302705-3drl0e2ae76e90i7a80gv7v26f8dis6f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
