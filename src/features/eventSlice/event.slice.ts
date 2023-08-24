@@ -1,8 +1,8 @@
 import {createSlice} from '@reduxjs/toolkit';
-import eventType from '../../types/eventSlice';
+import eventType from '../../types/eventType/eventType';
 
 interface eventState {
-  data: eventState[] | [];
+  data: eventType[] | [];
   error: string;
   loading: boolean;
 }
