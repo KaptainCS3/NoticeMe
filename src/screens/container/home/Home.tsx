@@ -11,12 +11,22 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import EventContainer from '../../../components/EventContainer/EventContainer';
 import Actions from '../../../components/Actions/Actions';
+import {TypeScreens} from '../../../types/generics/TypeScreens';
+import {StackNavigationProp} from '@react-navigation/stack';
 
-interface Props {
-  text: string;
-}
+type Props = {
+  navigation: StackNavigationProp<TypeScreens, 'Home'>;
+};
 
-const Home = ({text}: Props) => {
+const Home: React.FC<Props> = ({navigation}) => {
+  const showCreateEvent = () => {
+    navigation.navigate('CreateEvent');
+  };
+
+  const showCreateParticipant = () => {
+    navigation.navigate('CreateParticipant');
+  };
+  
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -33,20 +43,15 @@ const Home = ({text}: Props) => {
           <View style={styles.container}>
             <View
               style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  fontSize: 24,
-                }}>
-                {text}
-              </Text>
-            </View>
+                marginTop: 10,
+              }}></View>
             <EventContainer />
           </View>
         </ScrollView>
-        <Actions />
+        <Actions
+          showCreateEvent={showCreateEvent}
+          showCreateParticipant={showCreateParticipant}
+        />
       </SafeAreaView>
     </>
   );
