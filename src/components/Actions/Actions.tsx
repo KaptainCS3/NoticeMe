@@ -1,6 +1,18 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-const Actions = () => {
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from 'react-native';
+
+interface Props {
+  showCreateEvent: (navigation: any) => void;
+  showCreateParticipant: (navigation: any) => void;
+}
+const Actions: React.FC<Props> = ({showCreateEvent, showCreateParticipant}) => {
   const [showOptions, setShowOptions] = useState(false);
   const toggleOption = () => {
     setShowOptions(!showOptions);
@@ -15,17 +27,13 @@ const Actions = () => {
             height: 60,
             width: 60,
           }}>
-          <TouchableOpacity onPress={toggleOption}>
-            <Text
-              style={{
-                marginTop: '-8%',
-                fontSize: 45,
-                color: '#8ac3ee',
-                fontWeight: '300',
-                // rotation: showOptions ? '45' : 0,
-              }}>
-              +
-            </Text>
+          <TouchableOpacity
+            onPress={toggleOption}
+            style={[style.btn, showOptions ? style.trans : null]}>
+            <Image
+              source={require('../../../assets/plus.png')}
+              style={style.btnPlus}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -47,25 +55,27 @@ const Actions = () => {
               backgroundColor: '#fff',
               borderRadius: 100,
               elevation: 20,
-            }}>
+            }}
+            onPress={showCreateEvent}>
             <Image
               source={require('../../../assets/confetti.png')}
-              style={{width: '50%', height: '50%', tintColor: '#8ac3ee'}}
+              style={style.img}
             />
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={showCreateParticipant}
             style={{
               justifyContent: 'center',
               alignItems: 'center',
               height: 40,
               width: 40,
               backgroundColor: '#fff',
-              borderRadius: 100,
               elevation: 20,
+              borderRadius: 100,
             }}>
             <Image
               source={require('../../../assets/addUser.png')}
-              style={{width: '50%', height: '50%', tintColor: '#8ac3ee'}}
+              style={style.img}
             />
           </TouchableOpacity>
         </View>
@@ -86,5 +96,20 @@ const style = StyleSheet.create({
     backgroundColor: 'black',
     borderRadius: 100,
     // elevation: 15,
+  },
+  btnPlus: {width: '45%', height: '45%', tintColor: '#8ac3ee'},
+  btn: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  img: {
+    width: '50%',
+    height: '50%',
+    tintColor: '#8ac3ee',
+  },
+  trans: {
+    transform: [{rotate: '45deg'}],
   },
 });
