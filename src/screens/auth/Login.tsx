@@ -1,5 +1,13 @@
-import React from 'react';
-import {View, Text, StyleSheet, TextInput, Alert} from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Alert,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import Logo from '../../../assets/undraw_security_on_re_e491.svg';
 import DefaultButton from '../../components/button/default-button/DefaultButton';
 import {loginUser} from '../../features/loginSlice/login.slice';
@@ -8,7 +16,7 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 import loginType from '../../types/loginType/loginType';
 import auth from '@react-native-firebase/auth';
-
+import Icon from 'react-native-vector-icons/Ionicons';
 const Login = () => {
   const dispatch = useAppDispatch();
   const loginData = useAppSelector(state => state.loginSlice);
@@ -16,7 +24,10 @@ const Login = () => {
     email: '',
     password: '',
   };
+  // const eye = require('../../../assets/eye.png');
+  const hidden = require('../../../assets/hide.png');
   const {email, password} = loginData;
+  const [showPassword, setShowPassword] = useState<Boolean>(false);
   const userLoginSchema = yup.object().shape({
     password: yup.string().min(4).required('password is required'),
     email: yup
@@ -83,26 +94,50 @@ const Login = () => {
 
                 {/* Password input field */}
                 <Text style={{marginVertical: 8}}>Password</Text>
-                <TextInput
-                  placeholder="password"
-                  secureTextEntry={true}
+                <View
                   style={{
-                    padding: 5,
-                    borderColor: '#999',
-                    borderWidth: 1,
+                    flexDirection: 'row',
                     borderRadius: 10,
-                    paddingLeft: 16,
-                  }}
-                  onChangeText={handleChange('password')}
-                  onBlur={() => setFieldTouched('password')}
-                  value={values.password}
-                />
+                    borderColor: '#999',
+                    width: '100%',
+                    borderWidth: 1,
+                    justifyContent: 'space-between',
+                  }}>
+                  <TextInput
+                    placeholder="password"
+                    secureTextEntry={showPassword ? false : true}
+                    style={{
+                      padding: 5,
+                      width: '80%',
+                      paddingLeft: 16,
+                    }}
+                    onChangeText={handleChange('password')}
+                    onBlur={() => setFieldTouched('password')}
+                    value={values.password}
+                  />
+                  <View
+                    style={{
+                      paddingHorizontal: 10,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <TouchableOpacity
+                      onPress={() => setShowPassword(!showPassword)}>
+                      {showPassword ? (
+                        <Icon name="eye-off" size={24} color="#000" />
+                      ) : (
+                        <Icon name="eye" size={24} color="#000" />
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                </View>
                 {errors.password && (
                   <Text style={{fontSize: 15, color: 'red', paddingTop: 5}}>
                     {errors.password}
                   </Text>
                 )}
                 <DefaultButton
+                  btnText="Login"
                   handleSubmit={handleSubmit}
                   isSubmitting={isSubmitting}
                 />
