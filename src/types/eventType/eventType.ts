@@ -5,4 +5,5 @@ export default interface eventType {
   endTime: object | null | Date | string;
   startDate: object | null | Date | string | number;
   endDate: object | null | Date | string | number;
+  participants: Array<string | null>;
 };

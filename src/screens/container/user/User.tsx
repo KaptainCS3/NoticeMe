@@ -9,11 +9,8 @@ import {
   ScrollView,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-interface Props {
-  text: string;
-}
 
-const User = ({text}: Props) => {
+const User = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -28,13 +25,6 @@ const User = ({text}: Props) => {
             backgroundColor={backgroundStyle.backgroundColor}
           />
           <View style={styles.container}>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={styles.heading}>{text}</Text>
-            </View>
             <View style={{marginTop: 10}}>
               <View style={styles.border}>
                 <Text style={{width: '25%'}}>name</Text>

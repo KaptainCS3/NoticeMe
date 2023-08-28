@@ -1,42 +1,26 @@
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 
 interface Props {
   handleSubmit?: () => void;
   isSubmitting?: boolean;
+  styleBtn?: any;
+  btnText?: string;
 }
 
-const DefaultButton = ({handleSubmit, isSubmitting}: Props) => {
-  if (isSubmitting) {
-    console.log(isSubmitting);
-  } else {
-    console.log('value is false');
-  }
-
+const DefaultButton = ({handleSubmit, isSubmitting, styleBtn, btnText}: Props) => {
   return (
     <View>
       <TouchableOpacity
-        style={[styles.button]}
+        style={[
+          styleBtn ? [styleBtn[0]] : null,
+          isSubmitting ? {opacity: 0.5, shadowOpacity: 0.5} : null,
+        ]}
         onPress={handleSubmit}
         disabled={isSubmitting}>
-        <Text style={styles.buttonText}>Login</Text>
+        <Text style={styleBtn ? [styleBtn[1]] : null}>{btnText}</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
 export default DefaultButton;
-
-const styles = StyleSheet.create({
-  button: {
-    marginTop: 13,
-    backgroundColor: '#1E319D',
-    paddingVertical: 8,
-    borderRadius: 10,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-});
