@@ -2,7 +2,6 @@ import React from 'react';
 import {
   useColorScheme,
   View,
-  Text,
   StyleSheet,
   StatusBar,
   SafeAreaView,
@@ -11,14 +10,21 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import EventContainer from '../../../components/EventContainer/EventContainer';
 import Actions from '../../../components/Actions/Actions';
+import {TypeScreens} from '../../../types/generics/TypeScreens';
+import {StackNavigationProp} from '@react-navigation/stack';
 
-interface Props {
-  text: string;
-}
-
-const Events = ({text}: Props) => {
+type Props = {
+  navigation: StackNavigationProp<TypeScreens, 'Home'>;
+};
+const Events: React.FC<Props> = ({navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
+  const showCreateEvent = () => {
+    navigation.navigate('CreateEvent');
+  };
 
+  const showCreateParticipant = () => {
+    navigation.navigate('CreateParticipant');
+  };
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -33,23 +39,18 @@ const Events = ({text}: Props) => {
           <View style={styles.container}>
             <View
               style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  fontSize: 24,
-                }}>
-                {text}
-              </Text>
-            </View>
+                marginTop: 10,
+              }}></View>
             <EventContainer />
             <EventContainer />
             <EventContainer />
             <EventContainer />
           </View>
         </ScrollView>
-            <Actions />
+        <Actions
+          showCreateEvent={showCreateEvent}
+          showCreateParticipant={showCreateParticipant}
+        />
       </SafeAreaView>
     </>
   );
