@@ -2,10 +2,12 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Participant from './screens/container/participant/Participant';
 import Events from './screens/container/event/Events';
 import User from './screens/container/user/User';
-import {View, Image} from 'react-native';
-import Home from './screens/container/home/Home';
+import {View} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Feather from 'react-native-vector-icons/Feather';
 const Tab = createBottomTabNavigator();
-
+import {Screens} from './App';
 const Tabs = () => {
   return (
     <Tab.Navigator
@@ -17,19 +19,15 @@ const Tabs = () => {
         headerTitleAlign: 'center',
       }}>
       <Tab.Screen
-        name="home"
-        component={Home}
+        name="Home"
+        component={Screens}
         options={{
           tabBarIcon: ({focused}) => (
             <View>
-              <Image
-                source={require('../assets/home.png')}
-                resizeMethod="contain"
-                style={{
-                  width: 30,
-                  height: 30,
-                  tintColor: focused ? '#8ac3ee' : '#d9d9d9',
-                }}
+              <Ionicons
+                name="home"
+                size={28}
+                color={focused ? '#8ac3ee' : '#d9d9d9'}
               />
             </View>
           ),
@@ -41,52 +39,42 @@ const Tabs = () => {
         options={{
           tabBarIcon: ({focused}) => (
             <View>
-              <Image
-                source={require('../assets/events.png')}
-                resizeMethod="contain"
-                style={{
-                  width: 30,
-                  height: 30,
-                  tintColor: focused ? '#8ac3ee' : '#d9d9d9',
-                }}
+              <MaterialIcons
+              name='event'
+                size={28}
+                color={focused ? '#8ac3ee' : '#d9d9d9'}
               />
             </View>
           ),
         }}
       />
+
       <Tab.Screen
         name="Participants"
         component={Participant}
         options={{
           tabBarIcon: ({focused}) => (
             <View>
-              <Image
-                source={require('../assets/add-group.png')}
-                resizeMethod="contain"
-                style={{
-                  width: 30,
-                  height: 30,
-                  tintColor: focused ? '#8ac3ee' : '#d9d9d9',
-                }}
+              <Feather
+                name="users"
+                size={28}
+                color={focused ? '#8ac3ee' : '#d9d9d9'}
               />
             </View>
           ),
         }}
       />
+
       <Tab.Screen
         name="User"
         component={User}
         options={{
           tabBarIcon: ({focused}) => (
             <View>
-              <Image
-                source={require('../assets/user.png')}
-                resizeMethod="contain"
-                style={{
-                  width: 30,
-                  height: 30,
-                  tintColor: focused ? '#8ac3ee' : '#d9d9d9',
-                }}
+              <Feather
+                name="user"
+                size={28}
+                color={focused ? '#8ac3ee' : '#d9d9d9'}
               />
             </View>
           ),
