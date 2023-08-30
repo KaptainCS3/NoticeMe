@@ -4,9 +4,7 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Alert,
   TouchableOpacity,
-  KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
 } from 'react-native';
@@ -20,6 +18,7 @@ import DatePicker from 'react-native-date-picker';
 import ParticipantContainer from '../participantContainer/ParticipantContainer';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {TypeScreens} from '../../types/generics/TypeScreens';
+import firestore from '@react-native-firebase/firestore'
 
 type Props = {
   navigation: StackNavigationProp<TypeScreens, 'CreateEvent'>;
@@ -61,10 +60,8 @@ const CreateEvent: React.FC<Props> = ({navigation}) => {
     <Formik
       initialValues={initialValues}
       validationSchema={createEventSchema}
-      onSubmit={values => {
-        // Alert.alert(JSON.stringify(values));
-        dispatch(createEvent(values));
-        console.log(values);
+      onSubmit={({title, description, startDate, startTime, endDate, endTime, participants}, {setSubmitting}) => {
+        
         navigation.navigate('Home');
       }}>
       {({
@@ -169,7 +166,7 @@ const CreateEvent: React.FC<Props> = ({navigation}) => {
                             <Text style={{marginVertical: 15}}>Start Time</Text>
                           </TouchableOpacity>
                           <Text style={{padding: 8}}>
-                            {startTime.toLocaleTimeString()}
+                            {values.startTime && startTime.toLocaleTimeString()}
                           </Text>
 
                           {/* EndTime input field  style={{marginVertical: 15}}*/}
@@ -198,7 +195,7 @@ const CreateEvent: React.FC<Props> = ({navigation}) => {
                             <Text style={{marginVertical: 15}}>End Time</Text>
                           </TouchableOpacity>
                           <Text style={{padding: 8}}>
-                            {endTime.toLocaleTimeString()}
+                            {values.endTime && endTime.toLocaleTimeString()}
                           </Text>
                         </View>
                         <View style={{width: '45%'}}>
@@ -228,7 +225,7 @@ const CreateEvent: React.FC<Props> = ({navigation}) => {
                             <Text style={{marginVertical: 15}}>Start Date</Text>
                           </TouchableOpacity>
                           <Text style={{padding: 8}}>
-                            {startDate.toDateString()}
+                            {values.startDate && startDate.toDateString()}
                           </Text>
 
                           {/* StartDate input field  style={{marginVertical: 15}}*/}
@@ -258,7 +255,7 @@ const CreateEvent: React.FC<Props> = ({navigation}) => {
                             <Text style={{marginVertical: 15}}>End Date</Text>
                           </TouchableOpacity>
                           <Text style={{padding: 8}}>
-                            {endDate.toDateString()}
+                            {values.endDate && endDate.toDateString()}
                           </Text>
                         </View>
                       </View>
