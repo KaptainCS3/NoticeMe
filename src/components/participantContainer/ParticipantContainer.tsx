@@ -1,13 +1,19 @@
-import React, {useEffect} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {useAppDispatch, useAppSelector} from '../../hooks/hook';
 import {addMember} from '../../features/memberSlice/member.slice';
+import EditCreateParticipant from '../editCreateParticipant/EditCreateParticipant';
 const ParticipantContainer = () => {
   const dispatch = useAppDispatch();
   const memberData = useAppSelector(state => state.memberSlice);
   const {data, loading, error} = memberData;
+  const [showOptions, setShowOptions] = useState<Boolean>(false);
+  const [memberDelete, setMemberDelete] = useState<Boolean>(false);
+  const [memberUpdate, setMemberUpdate] = useState<Boolean>(false);
+  const [selectedMember, setSelectedMember] = useState<string | null>(null);
 
+  //! Read operation from Member collection
   useEffect(() => {
     const allParticipants = async () => {
       const member = await firestore().collection('Members').get();
@@ -18,17 +24,46 @@ const ParticipantContainer = () => {
       dispatch(addMember(memberData));
     };
     allParticipants();
-  }, [addMember]);
+  }, [addMember, dispatch]);
+
+  //! Delete operation from Member collection
+  const handleDelete = async (documentId: string) => {
+    try {
+      setMemberDelete(true);
+      await firestore().collection('Members').doc(documentId).delete();
+      console.log('Document deleted successfully!', documentId);
+      setMemberDelete(false);
+    } catch (error) {
+      console.log('Error deleting document:', error);
+    }
+  };
+
+  //! Update operation from Member collection
+  const handleUpdate = async (documentId: string, data: any) => {
+    try {
+      if (data.user_id === documentId) {
+        setSelectedMember(documentId);
+        setMemberUpdate(!memberUpdate);
+        // await firestore().collection('Members').doc(documentId).update({});
+        console.log('Document clicked successfully!', documentId);
+      } else console.log('not this document');
+      // setMemberDelete(false);
+    } catch (error) {
+      console.log('Error deleting document:', error);
+    }
+  };
 
   const members = data?.map(member => {
     return (
       <>
         <View
+          key={member.user_id.toString()}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
             marginVertical: 5,
+            position: 'relative',
           }}>
           <View
             style={{
@@ -40,7 +75,6 @@ const ParticipantContainer = () => {
               style={{
                 width: 50,
                 height: 50,
-                // backgroundColor: '#f99',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
@@ -55,35 +89,65 @@ const ParticipantContainer = () => {
             </View>
           </View>
           <View>
-            <View
-              style={{
-                width: 5,
-                height: 5,
-                backgroundColor: '#000',
-                borderRadius: 50,
-              }}></View>
-            <View
-              style={{
-                width: 5,
-                height: 5,
-                backgroundColor: '#000',
-                borderRadius: 50,
-                marginVertical: 2,
-              }}></View>
-            <View
-              style={{
-                width: 5,
-                height: 5,
-                backgroundColor: '#000',
-                borderRadius: 50,
-              }}></View>
+            <TouchableOpacity>
+              <View
+                style={{
+                  width: 5,
+                  height: 5,
+                  backgroundColor: '#000',
+                  borderRadius: 50,
+                }}></View>
+              <View
+                style={{
+                  width: 5,
+                  height: 5,
+                  backgroundColor: '#000',
+                  borderRadius: 50,
+                  marginVertical: 2,
+                }}></View>
+              <View
+                style={{
+                  width: 5,
+                  height: 5,
+                  backgroundColor: '#000',
+                  borderRadius: 50,
+                }}></View>
+            </TouchableOpacity>
           </View>
+          {showOptions && (
+            <View
+              style={{
+                // paddingVertical: 40,
+                paddingHorizontal: 15,
+                backgroundColor: '#fff',
+                width: '25%',
+                height: 100,
+                position: 'absolute',
+                right: -24,
+                top: -10,
+                justifyContent: 'space-evenly',
+                alignItems: 'center',
+              }}></View>
+          )}
         </View>
+        <TouchableOpacity
+          onPress={() => handleUpdate(member.user_id.toLocaleString(), member)}>
+          <Text>Edit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleDelete(member.user_id.toString())}>
+          <Text>Delete</Text>
+        </TouchableOpacity>
       </>
     );
   });
 
-  return <>{members}</>;
+  return (
+    <>
+      {members}
+      {memberUpdate && <EditCreateParticipant />}
+    </>
+  );
 };
 
 export default ParticipantContainer;
