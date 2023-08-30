@@ -4,6 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import {useAppDispatch, useAppSelector} from '../../hooks/hook';
 import {addMember} from '../../features/memberSlice/member.slice';
 import EditCreateParticipant from '../editCreateParticipant/EditCreateParticipant';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 const ParticipantContainer = () => {
   const dispatch = useAppDispatch();
   const memberData = useAppSelector(state => state.memberSlice);
@@ -12,6 +13,7 @@ const ParticipantContainer = () => {
   const [memberDelete, setMemberDelete] = useState<Boolean>(false);
   const [memberUpdate, setMemberUpdate] = useState<Boolean>(false);
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
+  const [edit, setEdit] = useState(null);
 
   //! Read operation from Member collection
   useEffect(() => {
@@ -39,17 +41,24 @@ const ParticipantContainer = () => {
   };
 
   //! Update operation from Member collection
-  const handleUpdate = async (documentId: string, data: any) => {
+  const handleUpdate = (documentId: string, data: any) => {
+    if (data.user_id === documentId) {
+      setSelectedMember(documentId);
+      setEdit(data);
+      setMemberUpdate(!memberUpdate);
+      console.log('Document clicked successfully!', documentId, data);
+    } else console.log('not this document');
+  };
+  const confirmUpdate = async (documentId, data) => {
     try {
-      if (data.user_id === documentId) {
-        setSelectedMember(documentId);
-        setMemberUpdate(!memberUpdate);
-        // await firestore().collection('Members').doc(documentId).update({});
-        console.log('Document clicked successfully!', documentId);
-      } else console.log('not this document');
-      // setMemberDelete(false);
+      setMemberDelete(true);
+      await firestore().collection('Members').doc(documentId).update(data);
+      // console.log('Document updated successfully!', documentId, data);
+      console.log(data);
+      setMemberDelete(false);
+      setMemberUpdate(false);
     } catch (error) {
-      console.log('Error deleting document:', error);
+      console.log('Error updating document:', error);
     }
   };
 
@@ -89,8 +98,22 @@ const ParticipantContainer = () => {
             </View>
           </View>
           <View>
-            <TouchableOpacity>
-              <View
+            <TouchableOpacity style={{flexDirection: 'row'}}>
+              <TouchableOpacity
+                onPress={() =>
+                  handleUpdate(member.user_id.toLocaleString(), member)
+                }>
+                <Text style={{marginRight: 8}}>
+                  <FontAwesome5 name="pen" color={'#fff'} size={25} />
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => handleDelete(member.user_id.toString())}>
+                <Text style={{marginLeft: 8}}>
+                  <FontAwesome5 name="trash" color={'#fff'} size={25} />
+                </Text>
+              </TouchableOpacity>
+              {/* <View
                 style={{
                   width: 5,
                   height: 5,
@@ -111,7 +134,7 @@ const ParticipantContainer = () => {
                   height: 5,
                   backgroundColor: '#000',
                   borderRadius: 50,
-                }}></View>
+                }}></View> */}
             </TouchableOpacity>
           </View>
           {showOptions && (
@@ -130,14 +153,6 @@ const ParticipantContainer = () => {
               }}></View>
           )}
         </View>
-        <TouchableOpacity
-          onPress={() => handleUpdate(member.user_id.toLocaleString(), member)}>
-          <Text>Edit</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleDelete(member.user_id.toString())}>
-          <Text>Delete</Text>
-        </TouchableOpacity>
       </>
     );
   });
@@ -145,7 +160,13 @@ const ParticipantContainer = () => {
   return (
     <>
       {members}
-      {memberUpdate && <EditCreateParticipant />}
+      {memberUpdate && (
+        <EditCreateParticipant
+          documentId={selectedMember}
+          edit={edit}
+          confirmUpate={confirmUpdate}
+        />
+      )}
     </>
   );
 };
