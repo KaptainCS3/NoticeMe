@@ -62,7 +62,6 @@ const CreateParticipant: React.FC<Props> = ({navigation}) => {
     }
   };
 
-
   const createParticipantSchema = yup.object().shape({
     name: yup
       .string()
@@ -84,12 +83,13 @@ const CreateParticipant: React.FC<Props> = ({navigation}) => {
     <Formik
       initialValues={initialValues}
       validationSchema={createParticipantSchema}
+      //! Write operation to Collection
       onSubmit={async (
         {avarta, user_id, name, email, phone},
         {setSubmitting},
       ) => {
         try {
-          user_id = uuid.v4();
+          user_id = uuid.v4().toString();
           avarta =
             selectedImage && 'path' in selectedImage
               ? `${uuid.v4()}${selectedImage.path.slice(70)}`
@@ -109,9 +109,12 @@ const CreateParticipant: React.FC<Props> = ({navigation}) => {
             };
 
             const memberCollection = firestore().collection('Members');
-            memberCollection.add(memberData).then(() => {
-              console.warn('Member successfully add to cloud');
-            });
+            memberCollection
+              .doc(user_id) // Use the user_id as the document ID
+              .set(memberData)
+              .then(() => {
+                console.warn('Member successfully added to cloud');
+              });
             setSubmitting(false);
             navigation.navigate('Home'); // Redirect to the home screen
           } else {
@@ -129,9 +132,12 @@ const CreateParticipant: React.FC<Props> = ({navigation}) => {
               avarta: avartaUrl,
             };
             const memberCollection = firestore().collection('Members');
-            memberCollection.add(memberData).then(() => {
-              console.warn('Member successfully add to cloud');
-            });
+            memberCollection
+              .doc(user_id) // Use the user_id as the document ID
+              .set(memberData)
+              .then(() => {
+                console.warn('Member successfully added to cloud');
+              });
             setSubmitting(false);
             navigation.navigate('Home'); // Redirect to the home screen
           }
