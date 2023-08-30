@@ -26,7 +26,7 @@ const Tabs = () => {
             <View>
               <Ionicons
                 name="home"
-                size={28}
+                size={25}
                 color={focused ? '#8ac3ee' : '#d9d9d9'}
               />
             </View>
@@ -41,7 +41,7 @@ const Tabs = () => {
             <View>
               <MaterialIcons
               name='event'
-                size={28}
+                size={25}
                 color={focused ? '#8ac3ee' : '#d9d9d9'}
               />
             </View>
@@ -57,7 +57,7 @@ const Tabs = () => {
             <View>
               <Feather
                 name="users"
-                size={28}
+                size={25}
                 color={focused ? '#8ac3ee' : '#d9d9d9'}
               />
             </View>
