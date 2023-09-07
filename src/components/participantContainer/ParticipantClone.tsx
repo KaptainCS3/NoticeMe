@@ -50,8 +50,7 @@ const ParticipantClone = ({touch}: any) => {
             borderBottomWidth: 0.5,
             paddingBottom: 10,
           }}>
-          <TouchableOpacity
-            onPress={() => touch(member.user_id.toString(), member)}>
+          <TouchableOpacity onPress={() => touch(member.user_id.toString())}>
             <View
               style={{
                 flexDirection: 'row',
