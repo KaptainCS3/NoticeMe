@@ -17,12 +17,8 @@ import * as yup from 'yup';
 import DatePicker from 'react-native-date-picker';
 import ParticipantClone from '../participantContainer/ParticipantClone';
 import {SkypeIndicator} from 'react-native-indicators';
-import { editEvent } from '../../features/editEventSlice/editEvent.slice';
-const EditCreateEvent = ({
-  documentId,
-  editEvents,
-  confirmUpate,
-}: any) => {
+import {editEvent} from '../../features/editEventSlice/editEvent.slice';
+const EditCreateEvent = ({documentId, editEvents, confirmUpate}: any) => {
   const [startTime, setStartTime] = useState(new Date());
   const [openStartTime, setOpenStartTime] = useState(false);
   const [endTime, setEndTime] = useState(new Date());
@@ -32,7 +28,9 @@ const EditCreateEvent = ({
   const [endDate, setEndDate] = useState(new Date());
   const [openEndDate, setOpenEndDate] = useState(false);
   const [showList, setShowList] = useState(false);
-  const [participantList, setParticipantList] = useState([]);
+  const [participantList, setParticipantList] = useState(
+    editEvents.participants,
+  );
 
   const initialValues: eventType = {
     eventId: editEvents.eventId,
@@ -44,30 +42,45 @@ const EditCreateEvent = ({
     endDate: editEvents.endDate,
     participants: editEvents.participant,
   };
+  console.warn(editEvents.participants);
+  console.log(editEvents.participants);
+
   const createEventSchema = yup.object().shape({
     title: yup
       .string()
       .matches(/(\w.+\s).+/, 'Enter at least 2 names')
       .required('name is required'),
     description: yup.string().min(15).required('description is required'),
-    // participants: yup
-    //   .array()
-    //   .min(1, 'Select at least one participant')
-    //   .required('participant list is required'),
+    participants: yup
+      .array()
+      .min(1, 'Select at least one participant')
+      .required('participant list is required'),
   });
   const dispatch = useAppDispatch();
+  // const touch = (id: string) => {
+  //   if (participantList.includes(id)) {
+  //     // const index = participantList.indexOf(id);
+  //     // const removedElement = participantList.splice(index, 1);
+  //     // console.log(`element removed value: ${removedElement}`);
+  //     // setParticipantList(removedElement);
+  //     setParticipantList(prevData => prevData.filter(item => item !== id));
+  //   } else {
+  //     setParticipantList(prevData => [...prevData, id]);
+  //     console.log(`element added value: ${id}`);
+  //   }
+  // };
+
   const touch = (id: string) => {
-    if (participantList.includes(id)) {
-      // const index = participantList.indexOf(id);
-      // const removedElement = participantList.splice(index, 1);
-      // console.log(`element removed value: ${removedElement}`);
-      // setParticipantList(removedElement);
-      setParticipantList(prevData => prevData.filter(item => item !== id));
-    } else {
-      setParticipantList(prevData => [...prevData, id]);
-      console.log(`element added value: ${id}`);
-    }
+    setParticipantList(prevData => {
+      if (prevData.includes(id)) {
+        return prevData.filter(item => item !== id);
+      } else {
+        return [...prevData, id];
+      }
+    });
   };
+
+  console.log(`values in state is [${participantList}]`);
   return (
     <Formik
       initialValues={initialValues}
@@ -90,6 +103,7 @@ const EditCreateEvent = ({
         errors,
         setFieldValue,
         handleBlur,
+        isSubmitting
       }) => (
         <>
           <SafeAreaView style={styles.sectionContainer}>
@@ -309,6 +323,7 @@ const EditCreateEvent = ({
                         <DefaultButton
                           btnText="Update Event"
                           handleSubmit={handleSubmit}
+                          isSubmitting={isSubmitting}
                           styleBtn={[
                             {
                               paddingVertical: 10,
@@ -357,12 +372,12 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 35,
     paddingBottom: 90,
     paddingTop: 30,
-    paddingHorizontal: 25,
+    // paddingHorizontal: 25,
     width: '100%',
     marginVertical: 10,
   },
   elevation: {
-    elevation: 20,
-    shadowColor: '#00020',
+    // elevation: 20,
+    // shadowColor: '#00020',
   },
 });

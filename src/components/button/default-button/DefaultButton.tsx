@@ -6,8 +6,14 @@ interface Props {
   styleBtn?: any;
   btnText?: string;
 }
+import {MaterialIndicator} from 'react-native-indicators';
 
-const DefaultButton = ({handleSubmit, isSubmitting, styleBtn, btnText}: Props) => {
+const DefaultButton = ({
+  handleSubmit,
+  isSubmitting,
+  styleBtn,
+  btnText,
+}: Props) => {
   return (
     <View>
       <TouchableOpacity
@@ -17,7 +23,9 @@ const DefaultButton = ({handleSubmit, isSubmitting, styleBtn, btnText}: Props) =
         ]}
         onPress={handleSubmit}
         disabled={isSubmitting}>
-        <Text style={styleBtn ? [styleBtn[1]] : null}>{btnText}</Text>
+        <Text style={styleBtn ? [styleBtn[1]] : null}>
+          {isSubmitting ? <MaterialIndicator color="#8ac3ee" /> : btnText}
+        </Text>
       </TouchableOpacity>
     </View>
   );
