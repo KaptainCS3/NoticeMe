@@ -2,15 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import participantType  from "../../types/participantType/participantType";
 
 interface participantState{
-    data: participantType[] | [];
-    error: string;
-    loading: boolean;
+    createdMember: participantType[] | [];
 }
 
 const initialValues:participantState = {
-    data: [],
-    error: '',
-    loading: false
+    createdMember: [],
 }
 
 const memberSlice = createSlice({
@@ -18,7 +14,7 @@ const memberSlice = createSlice({
     initialState: initialValues,
     reducers:{
         addMember: (state, actions) =>{
-            state.data = actions.payload
+            state.createdMember = actions.payload
         }
     }
 })
