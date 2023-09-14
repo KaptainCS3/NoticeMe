@@ -1,4 +1,5 @@
 export default interface eventType {
+  eventId: string;
   title: string;
   description: string;
   startTime: object | null | Date | string;
