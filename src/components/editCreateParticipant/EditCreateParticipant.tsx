@@ -15,8 +15,9 @@ import * as yup from 'yup';
 import participantType from '../../types/participantType/participantType';
 import ImagePicker from 'react-native-image-crop-picker';
 import uuid from 'react-native-uuid';
-import {useAppDispatch, useAppSelector} from '../../hooks/hook';
+import {useAppDispatch} from '../../hooks/hook';
 import storage from '@react-native-firebase/storage';
+import {editParticipant} from '../../features/editParticipantSlice/editParticipant.slice';
 // const task = reference.putFile(pathToFile);
 // task.on('state_changed', taskSnapshot => {
 //   console.log(`${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`);
@@ -40,6 +41,7 @@ const EditCreateParticipant = ({documentId, edit, confirmUpate}: any) => {
   };
   const [selectedImage, setSelectedImage] = useState<{path: string} | {}>({});
   const dispatch = useAppDispatch();
+
   //! upload handler
   const uplodadHandler = async () => {
     try {
@@ -82,7 +84,7 @@ const EditCreateParticipant = ({documentId, edit, confirmUpate}: any) => {
         {setSubmitting},
       ) => {
         try {
-          user_id = uuid.v4().toString();
+          // user_id = uuid.v4().toString();
           avarta =
             selectedImage && 'path' in selectedImage
               ? `${uuid.v4()}${selectedImage.path.slice(70)}`
@@ -100,9 +102,8 @@ const EditCreateParticipant = ({documentId, edit, confirmUpate}: any) => {
               email,
               avarta: avartaUrl,
             };
-            console.log(edit);
+            dispatch(editParticipant(memberData));
             confirmUpate(documentId, memberData);
-
             setSubmitting(false);
           } else {
             let avartaUrl = '';
@@ -228,7 +229,7 @@ const EditCreateParticipant = ({documentId, edit, confirmUpate}: any) => {
                           source={{uri: edit.avarta}}
                           style={{
                             width: '100%',
-                            height: 180,
+                            height: 150,
                             borderRadius: 15,
                             resizeMode: 'cover',
                           }}
@@ -240,7 +241,7 @@ const EditCreateParticipant = ({documentId, edit, confirmUpate}: any) => {
                           source={{uri: (selectedImage as {path: string}).path}}
                           style={{
                             width: '100%',
-                            height: 180,
+                            height: 150,
                             borderRadius: 15,
                             resizeMode: 'cover',
                           }}
@@ -254,7 +255,7 @@ const EditCreateParticipant = ({documentId, edit, confirmUpate}: any) => {
                       isSubmitting={isSubmitting}
                       styleBtn={[
                         {
-                          marginTop: 45,
+                          marginTop: 25,
                           paddingVertical: 10,
                           borderRadius: 10,
                           backgroundColor: '#1E319D',
@@ -290,11 +291,11 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   card: {
-    height: '100%',
+    // height: '100%',
     backgroundColor: 'white',
-    borderTopRightRadius: 35,
-    borderTopLeftRadius: 35,
-    // paddingBottom: 40,
+    borderWidth: 0.5,
+    borderRadius: 15,
+    paddingBottom: 40,
     paddingTop: 30,
     paddingHorizontal: 25,
     width: '100%',
