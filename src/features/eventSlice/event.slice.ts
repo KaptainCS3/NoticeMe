@@ -2,15 +2,11 @@ import {createSlice} from '@reduxjs/toolkit';
 import eventType from '../../types/eventType/eventType';
 
 interface eventState {
-  data: eventType[] | [];
-  error: string;
-  loading: boolean;
+  createdEvent: eventType[] | [];
 }
 
 const initialValues: eventState = {
-  data: [],
-  error: '',
-  loading: false,
+  createdEvent: [],
 };
 
 const eventSlice = createSlice({
@@ -18,7 +14,7 @@ const eventSlice = createSlice({
   initialState: initialValues,
   reducers: {
     createEvent: (state, action) => {
-      state.data = action.payload;
+      state.createdEvent = action.payload;
     },
   },
 });
