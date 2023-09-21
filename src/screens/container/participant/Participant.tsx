@@ -1,7 +1,6 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   useColorScheme,
   SafeAreaView,
@@ -19,7 +18,6 @@ type Props = {
 
 const Participant: React.FC<Props> = ({navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
-
   const showCreateEvent = () => {
     navigation.navigate('CreateEvent');
   };
@@ -60,7 +58,7 @@ export default Participant;
 const styles = StyleSheet.create({
   sectionContainer: {
     flex: 1,
-    backgroundColor: '#8ac3ee',
+    backgroundColor: '#fff',
     height: '100%',
   },
   container: {

@@ -15,22 +15,25 @@ import eventType from '../../types/eventType/eventType';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import DatePicker from 'react-native-date-picker';
-import ParticipantContainer from '../participantContainer/ParticipantContainer';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {TypeScreens} from '../../types/generics/TypeScreens';
-import firestore from '@react-native-firebase/firestore'
+import firestore from '@react-native-firebase/firestore';
+import ParticipantClone from '../participantContainer/ParticipantClone';
+import {SkypeIndicator} from 'react-native-indicators';
+import uuid from 'react-native-uuid';
 
 type Props = {
   navigation: StackNavigationProp<TypeScreens, 'CreateEvent'>;
 };
 
 const initialValues: eventType = {
+  eventId: '',
   title: '',
   description: '',
-  startTime: '',
-  endTime: '',
-  startDate: '',
-  endDate: '',
+  startTime: new Date(),
+  endTime: new Date(),
+  startDate: new Date(),
+  endDate: new Date(),
   participants: [],
 };
 const CreateEvent: React.FC<Props> = ({navigation}) => {
@@ -43,6 +46,7 @@ const CreateEvent: React.FC<Props> = ({navigation}) => {
   const [endDate, setEndDate] = useState(new Date());
   const [openEndDate, setOpenEndDate] = useState(false);
   const [showList, setShowList] = useState(false);
+  const [participantList, setParticipantList] = useState([]);
 
   const createEventSchema = yup.object().shape({
     title: yup
@@ -50,19 +54,63 @@ const CreateEvent: React.FC<Props> = ({navigation}) => {
       .matches(/(\w.+\s).+/, 'Enter at least 2 names')
       .required('name is required'),
     description: yup.string().min(15).required('description is required'),
+    participants: yup
+      .array()
+      .min(1, 'Select at least one participant')
+      .required('participant list is required'),
   });
   const dispatch = useAppDispatch();
-  const eventData = useAppSelector(state => state.eventSlice);
-  const {loading, error, data} = eventData;
-  console.log(data);
+  const eventData = useAppSelector(state => state.allEventSlice);
+  const {allEvents} = eventData;
 
+  const touch = (id: string) => {
+    setParticipantList(prevData => {
+      if (prevData.includes(id)) {
+        return prevData.filter(item => item !== id);
+      } else {
+        return [...prevData, id];
+      }
+    });
+  };
+
+  console.log(`values in state is [${participantList}]`);
+
+  // const touch = (id: string) => {
+  //   if (participantList.includes(id)) {
+  //     // const index = participantList.indexOf(id);
+  //     // const removedElement = participantList.splice(index, 1);
+  //     // console.log(`element removed value: ${removedElement}`);
+  //     // setParticipantList(removedElement);
+  //     setParticipantList(prevData => prevData.filter(item => item !== id));
+  //     console.log(`element removed is ${id}`);
+  //     console.log(participantList);
+
+  //   } else {
+  //     setParticipantList(prevData => [...prevData, id]);
+  //     console.log(`element added value: ${id}`);
+  //     console.log(participantList);
+  //   }
+  // };
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={createEventSchema}
-      onSubmit={({title, description, startDate, startTime, endDate, endTime, participants}, {setSubmitting}) => {
-        
-        navigation.navigate('Home');
+      onSubmit={(values, {setSubmitting}) => {
+        // {title, description, startDate, startTime, endDate, endTime, participants}
+        values.eventId = uuid.v4().toString();
+        values.participants = participantList;
+        dispatch(createEvent({values}));
+        const eventData = values;
+        const eventCollection = firestore().collection('Events');
+        eventCollection
+          .doc(values.eventId) // Use the user_id as the document ID
+          .set(eventData)
+          .then(data => {
+            console.warn('Event successfully added to cloud');
+            console.log(data);
+          });
+        setSubmitting(false);
+        navigation.navigate('Home'); // Redirect to the home screen
       }}>
       {({
         handleChange,
@@ -273,11 +321,23 @@ const CreateEvent: React.FC<Props> = ({navigation}) => {
                         }}>
                         <Text>Add Participants</Text>
                       </TouchableOpacity>
-                      {showList && (
+                      {showList ? (
                         <View>
-                          <ParticipantContainer />
+                          <ParticipantClone touch={touch} />
                         </View>
+                      ) : (
+                        <SkypeIndicator color="#1E319D" />
                       )}
+                      {/* {errors.participants && (
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            color: 'red',
+                            paddingTop: 5,
+                          }}>
+                          {errors.participants}
+                        </Text>
+                      )} */}
                       <View style={{marginTop: 25}}>
                         <DefaultButton
                           btnText="Create Event"

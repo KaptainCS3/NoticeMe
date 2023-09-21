@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Alert,
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
@@ -20,6 +19,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {TypeScreens} from '../../types/generics/TypeScreens';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
+import {useAppDispatch} from '../../hooks/hook';
+import {addMember} from '../../features/memberSlice/member.slice';
 
 // const task = reference.putFile(pathToFile);
 // task.on('state_changed', taskSnapshot => {
@@ -37,6 +38,7 @@ type Props = {
 const CreateParticipant: React.FC<Props> = ({navigation}) => {
   // const Ref = storage().ref(`default/image/$default_avarta.png`);
   // const defaultImage = await Ref.getDownloadURL();
+  const dispatch = useAppDispatch();
   const uploadIcon = require('../../../assets/cloudUpload.png');
   const defaultImage = require('../../../assets/default.png');
   const initialValues: participantType = {
@@ -108,6 +110,8 @@ const CreateParticipant: React.FC<Props> = ({navigation}) => {
               avarta: avartaUrl,
             };
 
+            dispatch(addMember(memberData));
+
             const memberCollection = firestore().collection('Members');
             memberCollection
               .doc(user_id) // Use the user_id as the document ID
@@ -131,6 +135,7 @@ const CreateParticipant: React.FC<Props> = ({navigation}) => {
               email,
               avarta: avartaUrl,
             };
+            dispatch(addMember(memberData));
             const memberCollection = firestore().collection('Members');
             memberCollection
               .doc(user_id) // Use the user_id as the document ID
